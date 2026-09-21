@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
+import Dashboard from './pages/Dashboard';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { AppShell } from './components/layout/AppShell';
 
@@ -16,7 +17,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AppShell>
-                <div>Dashboard (Coming in Commit 7)</div>
+                <Dashboard />
               </AppShell>
             </ProtectedRoute>
           }
