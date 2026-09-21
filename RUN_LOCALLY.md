@@ -46,7 +46,11 @@ cp .env.example .env
 
 ```env
 # These are already set (leave as-is for local dev):
-DATABASE_URL=postgresql://captrack:captrack@localhost:5432/captrack
+# Note: port 5433, not 5432 - the Docker Postgres container is mapped to 5433
+# to avoid clashing with a native Postgres install that many machines already
+# have running on the default 5432. If nothing is listening on 5432 on your
+# machine, you can use it instead - just also update it in docker-compose.yml.
+DATABASE_URL=postgresql://captrack:captrack@localhost:5433/captrack
 PORT=3001
 JWT_SECRET=your-super-secret-jwt-key-change-this
 COOKIE_NAME=captrack_session
@@ -234,6 +238,37 @@ If not running, start it:
 npm run db:up
 ```
 
+### "Authentication failed against database server" / "P1000"
+
+This usually means something *other* than our Docker container is already
+listening on the port `DATABASE_URL` points to (commonly a native Postgres
+install occupying 5432). Check what's bound to the port:
+
+```bash
+# Windows:
+netstat -ano | findstr :5433
+tasklist /FI "PID eq <PID from above>"
+
+# macOS/Linux:
+lsof -i :5433
+```
+
+If it's not our `captrack-db` container, either stop the conflicting service
+or change the host port in `docker-compose.yml` and `DATABASE_URL`/`DATABASE_URL_TEST`
+in `.env` to something free (this repo defaults to 5433 for exactly this reason).
+
+### "prisma migrate deploy" fails with "Environment variable not found: DATABASE_URL"
+
+Prisma's CLI and Vite each only auto-load a `.env` file sitting in their own
+directory, not the monorepo root. This repo works around that by:
+- `server/package.json` scripts wrapping every Prisma/Node command with
+  `dotenv -e ../.env --` (loads the root `.env` explicitly)
+- `client/vite.config.ts` setting `envDir: "../"` (points Vite at the root `.env`)
+
+If you see this error, make sure you're running commands via the `npm run`
+scripts (which include the `dotenv -e ../.env --` prefix) rather than calling
+`prisma` or `vite` directly.
+
 ### "VITE_API_BASE_URL not set"
 
 The `.env` file in `client/` should have:
@@ -310,7 +345,7 @@ When you run `npm run dev`, you get:
 - Proxied API calls to http://localhost:3001
 
 ### Database
-- PostgreSQL in Docker on port 5432
+- PostgreSQL in Docker on port 5433 (mapped from container's internal 5432)
 - Database: `captrack`
 - User: `captrack`
 - Password: `captrack`

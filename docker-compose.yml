@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: captrack
       POSTGRES_INITDB_ARGS: "-c timezone=UTC"
     ports:
-      - "5432:5432"
+      - "5433:5432" # Host 5433 (5432 is taken by a native Postgres install on this machine)
     volumes:
       - captrack_pgdata:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
