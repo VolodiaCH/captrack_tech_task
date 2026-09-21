@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m 'Add architectural guidelines and design patterns *)",
+      "Bash(git commit -m 'Add comprehensive master plan with detailed phase breakdowns *)",
+      "Bash(npm run *)",
+      "Bash(git commit -m 'Add development workflow and commit guidelines *)",
+      "Bash(git commit -m 'Add manager summary and project overview *)",
+      "Bash(git commit -m 'Add project status snapshot *)",
+      "Bash(git commit -m 'Add quick reference guide *)",
+      "Bash(git commit -m 'Add executive summary for manager decision *)",
+      "Bash(git commit -m 'Add delivery checklist - verifying all requirements met *)",
+      "Bash(git commit -m 'Add START_HERE navigation file *)",
+      "Bash(git commit -m 'Phase 2 Commit 2: Router setup and AuthPage *)",
+      "Bash(git commit -m 'Add .claude project settings and instructions *)"
+    ]
+  }
+}

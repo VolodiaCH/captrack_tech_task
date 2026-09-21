@@ -1,0 +1,15 @@
+{
+  "allowlist": {
+    "bash": [
+      "^git ",
+      "^npm ",
+      "^node ",
+      "^ls ",
+      "^cat ",
+      "^pwd ",
+      "^find ",
+      "^grep ",
+      "^wc -l"
+    ]
+  }
+}
