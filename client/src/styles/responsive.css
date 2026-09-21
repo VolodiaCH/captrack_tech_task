@@ -1,0 +1,108 @@
+/* Mobile First Responsive Design */
+
+/* Small screens (640px and up) */
+@media (min-width: 640px) {
+  body {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Medium screens (768px and up) - Tablet */
+@media (min-width: 768px) {
+  :root {
+    --spacing-md: 1.25rem;
+    --spacing-lg: 1.75rem;
+  }
+
+  h1 {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* Large screens (1024px and up) - Desktop */
+@media (min-width: 1024px) {
+  :root {
+    --spacing-lg: 2rem;
+    --spacing-xl: 2.5rem;
+  }
+}
+
+/* Extra large screens (1280px and up) */
+@media (min-width: 1280px) {
+  body {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Mobile: Stack everything vertically */
+@media (max-width: 767px) {
+  body {
+    font-size: 0.95rem;
+  }
+
+  button {
+    min-height: 44px; /* Touch-friendly */
+    min-width: 44px;
+  }
+
+  input,
+  textarea,
+  select {
+    min-height: 44px;
+  }
+
+  /* Table to cards on mobile */
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Flex layout helpers */
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .gap-md {
+    gap: var(--spacing-md);
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  main {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  button,
+  input,
+  [role='button'] {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support (optional future enhancement) */
+@media (prefers-color-scheme: dark) {
+  /* Will implement in Phase 5 if time allows */
+}
