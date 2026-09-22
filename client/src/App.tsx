@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
+import TransactionsPage from './pages/TransactionsPage';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { AppShell } from './components/layout/AppShell';
 
@@ -27,7 +28,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AppShell>
-                <div>Transactions (Coming in Phase 3)</div>
+                <TransactionsPage />
               </AppShell>
             </ProtectedRoute>
           }
