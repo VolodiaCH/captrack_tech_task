@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Category } from '../../types';
+import { createTransactionSchema } from '../../validation/formSchemas';
 
 interface TransactionFormProps {
   categories: Category[];
@@ -41,14 +42,18 @@ export function TransactionForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.categoryId) newErrors.categoryId = 'Category is required';
-    if (!formData.title.trim()) newErrors.title = 'Title is required';
-    if (!formData.amount) newErrors.amount = 'Amount is required';
-    if (parseFloat(formData.amount) <= 0) newErrors.amount = 'Amount must be positive';
-    if (!formData.date) newErrors.date = 'Date is required';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const result = createTransactionSchema.safeParse(formData);
+    if (!result.success) {
+      const newErrors: Record<string, string> = {};
+      result.error.errors.forEach((error) => {
+        const field = error.path[0];
+        newErrors[field as string] = error.message;
+      });
+      setErrors(newErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {

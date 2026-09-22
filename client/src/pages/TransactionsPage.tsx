@@ -9,12 +9,14 @@ import { FilterBar } from '../components/transactions/FilterBar';
 import { Modal } from '../components/common/Modal';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { EmptyState } from '../components/common/EmptyState';
+import { Toast, useToast } from '../components/common/Toast';
 import { Transaction } from '../types';
 
 export default function TransactionsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const { toast, showError, showSuccess, clearToast } = useToast();
 
   const filters: TransactionFilters = {
     search: searchParams.get('search') || undefined,
@@ -51,19 +53,38 @@ export default function TransactionsPage() {
     date: string;
     notes?: string;
   }) => {
-    await createTransaction.mutateAsync(data);
-    setModalOpen(false);
+    try {
+      await createTransaction.mutateAsync(data);
+      showSuccess('Transaction created successfully');
+      setModalOpen(false);
+    } catch (error) {
+      showError('Failed to create transaction. Please try again.');
+    }
   };
 
   const handleDelete = async (transaction: Transaction) => {
-    await deleteTransaction.mutateAsync(transaction.id);
-    setDeleteConfirm(null);
+    try {
+      await deleteTransaction.mutateAsync(transaction.id);
+      showSuccess('Transaction deleted successfully');
+      setDeleteConfirm(null);
+    } catch (error) {
+      showError('Failed to delete transaction. Please try again.');
+    }
   };
 
   if (isLoading || categoriesLoading) return <LoadingSpinner />;
 
   return (
     <div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={clearToast}
+        />
+      )}
+
       <div style={{ marginBottom: 'var(--spacing-lg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Transactions</h1>
         <button

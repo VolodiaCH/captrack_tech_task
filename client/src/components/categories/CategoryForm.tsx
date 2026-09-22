@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createCategorySchema } from '../../validation/formSchemas';
 
 interface CategoryFormProps {
   onSubmit: (name: string) => void;
@@ -13,16 +14,12 @@ export function CategoryForm({ onSubmit, isLoading, initialValue }: CategoryForm
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const trimmed = name.trim();
-    if (!trimmed) {
-      setError('Category name is required');
+    const result = createCategorySchema.safeParse({ name });
+    if (!result.success) {
+      setError(result.error.errors[0]?.message || 'Invalid category name');
       return;
     }
-    if (trimmed.length > 50) {
-      setError('Category name must be 50 characters or less');
-      return;
-    }
-    onSubmit(trimmed);
+    onSubmit(result.data.name);
   };
 
   return (

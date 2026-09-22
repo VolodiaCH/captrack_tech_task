@@ -10,12 +10,14 @@ import { CategoryList } from '../components/categories/CategoryList';
 import { Modal } from '../components/common/Modal';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { EmptyState } from '../components/common/EmptyState';
+import { Toast, useToast } from '../components/common/Toast';
 
 export default function CategoriesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { toast, showError, showSuccess, clearToast } = useToast();
 
   const { data: categories, isLoading } = useCategories();
   const createCategory = useCreateCategory();
@@ -23,27 +25,53 @@ export default function CategoriesPage() {
   const deleteCategory = useDeleteCategory();
 
   const handleCreate = async (name: string) => {
-    await createCategory.mutateAsync(name);
-    setModalOpen(false);
+    try {
+      await createCategory.mutateAsync(name);
+      showSuccess('Category created successfully');
+      setModalOpen(false);
+    } catch (error) {
+      showError('Failed to create category. Please try again.');
+    }
   };
 
   const handleUpdate = async (id: string, name: string) => {
-    setUpdatingId(id);
-    await updateCategory.mutateAsync({ id, name });
-    setUpdatingId(null);
+    try {
+      setUpdatingId(id);
+      await updateCategory.mutateAsync({ id, name });
+      showSuccess('Category updated successfully');
+      setUpdatingId(null);
+    } catch (error) {
+      showError('Failed to update category. Please try again.');
+      setUpdatingId(null);
+    }
   };
 
   const handleDelete = async (id: string) => {
-    setDeletingId(id);
-    await deleteCategory.mutateAsync(id);
-    setDeletingId(null);
-    setDeleteConfirm(null);
+    try {
+      setDeletingId(id);
+      await deleteCategory.mutateAsync(id);
+      showSuccess('Category deleted successfully');
+      setDeletingId(null);
+      setDeleteConfirm(null);
+    } catch (error) {
+      showError('Failed to delete category. Please try again.');
+      setDeletingId(null);
+    }
   };
 
   if (isLoading) return <LoadingSpinner />;
 
   return (
     <div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={clearToast}
+        />
+      )}
+
       <div
         style={{
           marginBottom: 'var(--spacing-lg)',
