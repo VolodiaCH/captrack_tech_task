@@ -1,20 +1,47 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTransactions, useCreateTransaction, useDeleteTransaction } from '../hooks/useTransactions';
 import { useCategories } from '../hooks/useCategories';
+import { TransactionFilters } from '../api/transactionsApi';
 import { TransactionsTable } from '../components/transactions/TransactionsTable';
 import { TransactionForm } from '../components/transactions/TransactionForm';
+import { FilterBar } from '../components/transactions/FilterBar';
 import { Modal } from '../components/common/Modal';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { EmptyState } from '../components/common/EmptyState';
 import { Transaction } from '../types';
 
 export default function TransactionsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const { data: transactions, isLoading } = useTransactions();
+
+  const filters: TransactionFilters = {
+    search: searchParams.get('search') || undefined,
+    categoryId: searchParams.get('categoryId') || undefined,
+    dateRange: (searchParams.get('dateRange') as any) || undefined,
+    startDate: searchParams.get('startDate') || undefined,
+    endDate: searchParams.get('endDate') || undefined,
+    minAmount: searchParams.get('minAmount') ? parseFloat(searchParams.get('minAmount')!) : undefined,
+    maxAmount: searchParams.get('maxAmount') ? parseFloat(searchParams.get('maxAmount')!) : undefined,
+  };
+
+  const { data: transactions, isLoading } = useTransactions(filters);
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const createTransaction = useCreateTransaction();
   const deleteTransaction = useDeleteTransaction();
+
+  const handleFiltersChange = (newFilters: TransactionFilters) => {
+    const params = new URLSearchParams();
+    if (newFilters.search) params.set('search', newFilters.search);
+    if (newFilters.categoryId) params.set('categoryId', newFilters.categoryId);
+    if (newFilters.dateRange) params.set('dateRange', newFilters.dateRange);
+    if (newFilters.startDate) params.set('startDate', newFilters.startDate);
+    if (newFilters.endDate) params.set('endDate', newFilters.endDate);
+    if (newFilters.minAmount !== undefined) params.set('minAmount', String(newFilters.minAmount));
+    if (newFilters.maxAmount !== undefined) params.set('maxAmount', String(newFilters.maxAmount));
+    setSearchParams(params);
+  };
 
   const handleCreate = async (data: {
     categoryId: string;
@@ -54,10 +81,16 @@ export default function TransactionsPage() {
         </button>
       </div>
 
+      <FilterBar
+        categories={categories || []}
+        onFiltersChange={handleFiltersChange}
+        filters={filters}
+      />
+
       {!transactions || transactions.length === 0 ? (
         <EmptyState
-          title="No transactions yet"
-          description="Start tracking your finances by creating your first transaction."
+          title={Object.keys(filters).some((k) => filters[k as keyof TransactionFilters]) ? 'No transactions match your filters' : 'No transactions yet'}
+          description={Object.keys(filters).some((k) => filters[k as keyof TransactionFilters]) ? 'Try adjusting your filters.' : 'Start tracking your finances by creating your first transaction.'}
           action={() => setModalOpen(true)}
           actionLabel="Create Transaction"
         />
