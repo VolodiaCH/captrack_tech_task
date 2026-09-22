@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import TransactionsPage from './pages/TransactionsPage';
+import CategoriesPage from './pages/CategoriesPage';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { AppShell } from './components/layout/AppShell';
 
@@ -38,7 +39,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AppShell>
-                <div>Categories (Coming in Phase 3)</div>
+                <CategoriesPage />
               </AppShell>
             </ProtectedRoute>
           }
