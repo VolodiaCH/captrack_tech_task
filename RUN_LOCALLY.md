@@ -210,6 +210,93 @@ Currently manual in-browser testing. Phase 5 will add E2E tests.
 
 ---
 
+## Testing Real-Time Alerts
+
+This section verifies that WebSocket budget threshold alerts work correctly.
+
+### Prerequisites
+
+- Backend and frontend running (`npm run dev`)
+- Logged in to CapTrack at http://localhost:5173
+- Open DevTools (F12) → Network tab → filter by "WS" to see WebSocket connection
+
+### Basic Alert Test
+
+1. **Verify WebSocket connection:**
+   - Refresh the page
+   - In DevTools Network tab, you should see a WebSocket connection to `/ws` (status "101 Switching Protocols")
+   - If you don't see it, check backend logs for connection errors
+
+2. **Create a budget:**
+   - Go to Dashboard
+   - Click "No budget set" (or "Create Budget" button)
+   - Enter $100 as the budget amount
+   - Click "Create Budget"
+   - You should see the budget card with 0% usage
+
+3. **Add transactions and watch alerts fire:**
+   - Go to Transactions page
+   - Create a transaction for $50
+     - Dashboard should update to 50% usage (no alert yet)
+   - Create another transaction for $30
+     - Dashboard should update to 80% usage
+     - You should see a toast notification at bottom-right: "📊 Spending at 80% — 80.00 / 100.00"
+     - Toast auto-dismisses after 5 seconds OR you can click the X to dismiss
+   - Create another transaction for $20
+     - Dashboard should update to 100% usage
+     - You should see toast: "📊 Spending at 100% — 100.00 / 100.00"
+     - You should also see a persistent red banner at the top: "⚠️ Budget limit reached: 100.00 / 100.00. Dismiss to acknowledge."
+
+4. **Test "fires once per month":**
+   - Delete the $20 transaction
+     - Dashboard should update to 80% usage
+     - The top banner should disappear (not a 100% alert anymore)
+     - No new 80% toast should appear (you already saw it)
+   - Create the $20 transaction again
+     - Dashboard should update to 100% usage
+     - No new 100% toast should appear (same month, same threshold, already fired)
+     - The top banner should NOT reappear (same reason)
+
+5. **Test "replay on reconnect":**
+   - While the banner is still showing, click "Dismiss"
+     - Banner disappears
+     - A message is sent to backend to mark alert as acknowledged
+   - Refresh the page (Ctrl+R)
+     - WebSocket reconnects
+     - Unacknowledged 100% alert replays, banner reappears
+   - Click "Dismiss" again
+     - Banner disappears
+     - You can now close DevTools
+
+### Multi-Month Test
+
+6. **Test month isolation:**
+   - On Dashboard, click "Next →" to go to next month
+     - Budget should show "No budget set for [next month]"
+     - Alerts from previous month should be gone
+   - Create a new budget for this month (e.g., $200)
+   - Add a $180 transaction
+     - Toast should fire: "📊 Spending at 80% — 180.00 / 200.00"
+   - Go back to previous month (click "← Previous")
+     - Dashboard should show the previous month's 100% banner should NOT appear
+     - Alerts stay isolated by month
+
+### Multi-User Test (Optional)
+
+7. **Test data isolation:**
+   - Open another browser window (Ctrl+N or Cmd+N)
+   - Log in as a different user (use a different OAuth account)
+   - Go to their Dashboard
+   - Create a different budget (e.g., $50)
+   - In Window 1, you should still see your $100 budget
+   - In Window 2, you should see their $50 budget
+   - Create a $40 transaction in Window 2
+     - You should see a toast in Window 2 only
+     - Window 1 should not show any alert
+   - This confirms alerts are per-user and not broadcast globally
+
+---
+
 ## Troubleshooting
 
 ### "Port 3001 already in use"
