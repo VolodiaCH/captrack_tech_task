@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMe } from '../../hooks/useMe';
 import { authApi } from '../../api/authApi';
 import { useState } from 'react';
+import { AlertBanner } from '../alerts/AlertBanner';
+import { ToastContainer } from '../alerts/ToastContainer';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -26,6 +28,7 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <AlertBanner />
       {/* Header */}
       <header
         style={{
@@ -91,8 +94,7 @@ export function AppShell({ children }: AppShellProps) {
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>{children}</div>
       </main>
 
-      {/* Alerts container placeholder */}
-      <div id="alerts-container" />
+      <ToastContainer />
     </div>
   );
 }

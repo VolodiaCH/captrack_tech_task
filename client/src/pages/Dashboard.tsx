@@ -8,6 +8,7 @@ import {
   formatYearMonth,
 } from '../utils/dateUtils';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { useWsAlerts } from '../ws/useWsAlerts';
 
 export default function Dashboard() {
   const { data: user } = useMe();
@@ -15,6 +16,7 @@ export default function Dashboard() {
   const { data: budget, isLoading } = useBudget(yearMonth);
   const createOrUpdateBudget = useCreateOrUpdateBudget();
   const [newBudgetAmount, setNewBudgetAmount] = useState('');
+  useWsAlerts(yearMonth);
 
   const handleCreateBudget = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -253,14 +255,6 @@ export default function Dashboard() {
           </form>
         </div>
       )}
-
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: 'var(--spacing-lg)',
-        }}
-      >
 
       <div
         style={{
