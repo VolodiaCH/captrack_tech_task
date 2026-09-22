@@ -7,6 +7,7 @@ import { setCookie, clearCookie } from "../auth/cookie.js";
 import { signToken } from "../auth/jwt.js";
 import { findOrCreateUser } from "../auth/auth.service.js";
 import { requireAuth } from "../auth/middleware.js";
+import prisma from "../prisma/client.js";
 
 export const router = Router();
 const env = loadEnv();
@@ -122,7 +123,7 @@ router.post("/logout", (req: Request, res: Response) => {
 });
 
 router.get("/me", requireAuth, async (req: Request, res: Response) => {
-  const user = await require("../prisma/client.js").default.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: req.user!.userId },
   });
 

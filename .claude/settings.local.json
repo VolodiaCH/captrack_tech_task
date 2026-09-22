@@ -13,7 +13,22 @@
       "Bash(git commit -m 'Add delivery checklist - verifying all requirements met *)",
       "Bash(git commit -m 'Add START_HERE navigation file *)",
       "Bash(git commit -m 'Phase 2 Commit 2: Router setup and AuthPage *)",
-      "Bash(git commit -m 'Add .claude project settings and instructions *)"
+      "Bash(git commit -m 'Add .claude project settings and instructions *)",
+      "Bash(git commit -m 'Phase 2 Commit 3: API client and useMe hook *)",
+      "Bash(git commit -m 'Phase 2 Commit 4: ProtectedRoute and AppShell *)",
+      "Bash(git commit -m 'Phase 2 Commit 5: Common UI components *)",
+      "Bash(git commit -m 'Phase 2 Commit 6: Complete global styles and theme variables *)",
+      "Bash(git commit -m 'Phase 2 Commit 7: Dashboard skeleton and OAuth flow verification *)",
+      "Bash(git commit -m 'Add comprehensive local run instructions *)",
+      "Bash(npm view *)",
+      "Bash(npm install *)",
+      "Bash(npm audit *)",
+      "Bash(node -e ' *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(tasklist *)",
+      "Bash(git commit -m 'Fix broken package versions, missing .env loading, and port 5432 conflict *)",
+      "Bash(npm *)",
+      "Bash(git commit -m 'Fix Node v22+ tsx loader deprecation and ESM require in auth routes *)"
     ]
   }
 }

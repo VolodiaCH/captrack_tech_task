@@ -1,6 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { loadEnv } from "./config/env.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { router as authRoutes } from "./routes/auth.routes.js";
@@ -16,10 +17,10 @@ export function createApp() {
   // Middleware
   app.use(helmet());
   app.use(
-    express.cors({
+    cors({
       origin: env.CLIENT_ORIGIN,
       credentials: true,
-    } as any),
+    }),
   );
   app.use(express.json());
   app.use(cookieParser());
