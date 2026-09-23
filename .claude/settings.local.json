@@ -28,7 +28,21 @@
       "Bash(tasklist *)",
       "Bash(git commit -m 'Fix broken package versions, missing .env loading, and port 5432 conflict *)",
       "Bash(npm *)",
-      "Bash(git commit -m 'Fix Node v22+ tsx loader deprecation and ESM require in auth routes *)"
+      "Bash(git commit -m 'Fix Node v22+ tsx loader deprecation and ESM require in auth routes *)",
+      "Bash(git commit -m 'Add Stage 3 handoff context document *)",
+      "Bash(git commit -m 'Add Stage 4 handoff context: WebSocket alerts *)",
+      "Bash(git checkout *)",
+      "Bash(git commit -m 'Add Stage 5 handoff: Polish & Release checklist *)",
+      "PowerShell(docker-compose *)",
+      "PowerShell(& 'C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker.exe' --version)",
+      "Bash(psql --version)",
+      "Bash(psql -U postgres -c \"SELECT version\\(\\);\")",
+      "Bash(psql -h 127.0.0.1 -U postgres -w -c \"SELECT 1\")",
+      "Bash(psql -U postgres -c \"CREATE ROLE captrack WITH LOGIN PASSWORD 'captrack';\")",
+      "PowerShell(Get-Process *)",
+      "Bash(curl -s http://localhost:3001/api/health)",
+      "Bash(git restore *)",
+      "Bash(git commit -m 'Fix TypeScript compilation errors in transactions routes and alert service *)"
     ]
   }
 }

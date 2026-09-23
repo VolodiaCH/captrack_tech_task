@@ -21,10 +21,10 @@ export async function recomputeThresholds(userId: string, yearMonth: string): Pr
   }
 
   const newlyFired: ThresholdAlert[] = [];
-  const { spent, usagePct, budget } = budgetStatus;
+  const { spent, usagePct: usagePctValue, budget } = budgetStatus;
 
   for (const threshold of THRESHOLDS) {
-    if (usagePct >= threshold) {
+    if (usagePctValue! >= threshold) {
       try {
         const alert = await prisma.thresholdAlertState.create({
           data: {
@@ -39,7 +39,7 @@ export async function recomputeThresholds(userId: string, yearMonth: string): Pr
           yearMonth,
           spent,
           budget: budget!,
-          usagePct: usagePct!,
+          usagePct: usagePctValue!,
           firedAt: alert.firedAt.toISOString(),
           replay: false,
         });

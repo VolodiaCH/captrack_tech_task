@@ -43,10 +43,10 @@ router.get("/", requireAuth, validateQuery(queryFiltersSchema), async (req: Requ
       categoryId: req.query.categoryId as string,
       startDate,
       endDate,
-      minAmount: req.query.minAmount as number,
-      maxAmount: req.query.maxAmount as number,
-      page: req.query.page as number,
-      pageSize: req.query.pageSize as number,
+      minAmount: req.query.minAmount ? Number(req.query.minAmount as string) : undefined,
+      maxAmount: req.query.maxAmount ? Number(req.query.maxAmount as string) : undefined,
+      page: req.query.page ? Number(req.query.page as string) : undefined,
+      pageSize: req.query.pageSize ? Number(req.query.pageSize as string) : undefined,
     });
 
     res.json(result);

@@ -17,9 +17,9 @@ export function FilterBar({ categories, onFiltersChange, filters }: FilterBarPro
   };
 
   const handleDateRangeChange = (dateRange: string) => {
-    const newFilters = { ...filters, dateRange: undefined, startDate: undefined, endDate: undefined };
+    const newFilters: typeof filters = { ...filters, dateRange: undefined, startDate: undefined, endDate: undefined };
     if (dateRange === 'thisMonth' || dateRange === 'lastMonth' || dateRange === 'custom') {
-      newFilters.dateRange = dateRange as 'thisMonth' | 'lastMonth' | 'custom';
+      newFilters.dateRange = dateRange;
     }
     onFiltersChange(newFilters);
   };
