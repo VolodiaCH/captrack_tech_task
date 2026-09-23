@@ -1,17 +1,22 @@
+import { useMemo } from 'react';
 import { useAlertStore } from '../../state/alertStore';
 import { useWsConnection } from '../../ws/useWsConnection';
 import { ClientMessage } from '../../ws/types';
 import './AlertBanner.css';
 
 export function AlertBanner() {
-  const alert = useAlertStore((state: any) => {
-    const unacknowledged = state.alerts.filter(
-      (a: any) => !a.acknowledged && a.threshold === 100
-    );
-    return unacknowledged.length > 0 ? unacknowledged[0] : null;
-  });
-
+  const allAlerts = useAlertStore((state: any) => state.alerts);
   const { socket, isConnected } = useWsConnection();
+
+  const alert = useMemo(
+    () => {
+      const unacknowledged = allAlerts.filter(
+        (a: any) => !a.acknowledged && a.threshold === 100
+      );
+      return unacknowledged.length > 0 ? unacknowledged[0] : null;
+    },
+    [allAlerts]
+  );
 
   if (!alert) return null;
 

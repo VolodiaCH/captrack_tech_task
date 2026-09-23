@@ -42,7 +42,14 @@
       "PowerShell(Get-Process *)",
       "Bash(curl -s http://localhost:3001/api/health)",
       "Bash(git restore *)",
-      "Bash(git commit -m 'Fix TypeScript compilation errors in transactions routes and alert service *)"
+      "Bash(git commit -m 'Fix TypeScript compilation errors in transactions routes and alert service *)",
+      "Bash(git tag -a v0.1.0 -m 'CapTrack MVP: Personal expense tracker with real-time budget alerts *)",
+      "Bash(git tag *)",
+      "Bash(git commit -m 'Add Stage 5 completion summary *)",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":3001\")",
+      "Bash(curl -s http://localhost:3001/api/auth/me)",
+      "Bash(git commit -m 'Fix infinite loop in alert components: memoize Zustand selectors *)"
     ]
   }
 }

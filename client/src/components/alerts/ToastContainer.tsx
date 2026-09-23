@@ -1,13 +1,17 @@
+import { useMemo } from 'react';
 import { useAlertStore } from '../../state/alertStore';
 import { useWsConnection } from '../../ws/useWsConnection';
 import { ClientMessage } from '../../ws/types';
 import './ToastContainer.css';
 
 export function ToastContainer() {
-  const alerts = useAlertStore((state: any) =>
-    state.alerts.filter((a: any) => !a.acknowledged)
-  );
+  const allAlerts = useAlertStore((state: any) => state.alerts);
   const { socket, isConnected } = useWsConnection();
+
+  const alerts = useMemo(
+    () => allAlerts.filter((a: any) => !a.acknowledged),
+    [allAlerts]
+  );
 
   const handleDismiss = (alert: any) => {
     if (socket && isConnected) {
