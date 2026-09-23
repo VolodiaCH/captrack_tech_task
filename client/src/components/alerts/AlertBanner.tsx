@@ -4,8 +4,10 @@ import { useWsConnection } from '../../ws/useWsConnection';
 import { ClientMessage } from '../../ws/types';
 import './AlertBanner.css';
 
+const selectAllAlerts = (state: any) => state.alerts;
+
 export function AlertBanner() {
-  const allAlerts = useAlertStore((state: any) => state.alerts);
+  const allAlerts = useAlertStore(selectAllAlerts);
   const { socket, isConnected } = useWsConnection();
 
   const alert = useMemo(

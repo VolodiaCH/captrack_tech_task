@@ -4,8 +4,10 @@ import { useWsConnection } from '../../ws/useWsConnection';
 import { ClientMessage } from '../../ws/types';
 import './ToastContainer.css';
 
+const selectAllAlerts = (state: any) => state.alerts;
+
 export function ToastContainer() {
-  const allAlerts = useAlertStore((state: any) => state.alerts);
+  const allAlerts = useAlertStore(selectAllAlerts);
   const { socket, isConnected } = useWsConnection();
 
   const alerts = useMemo(

@@ -9,3 +9,5 @@ build/
 .vite
 .turbo
 coverage/
+client/src/**/*.js
+client/src/**/*.js.map
