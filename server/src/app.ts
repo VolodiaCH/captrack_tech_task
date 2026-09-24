@@ -8,6 +8,7 @@ import { router as authRoutes } from "./routes/auth.routes.js";
 import { router as categoryRoutes } from "./routes/categories.routes.js";
 import { router as transactionRoutes } from "./routes/transactions.routes.js";
 import { router as budgetRoutes } from "./routes/budgets.routes.js";
+import { router as testRoutes } from "./routes/test.routes.js";
 
 const env = loadEnv();
 
@@ -30,6 +31,7 @@ export function createApp() {
   app.use("/api/categories", categoryRoutes);
   app.use("/api/transactions", transactionRoutes);
   app.use("/api/budgets", budgetRoutes);
+  app.use("/api/test", testRoutes);
 
   // Error handling
   app.use(errorHandler);
