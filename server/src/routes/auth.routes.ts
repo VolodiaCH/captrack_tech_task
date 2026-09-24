@@ -117,7 +117,7 @@ router.get("/callback/github", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/logout", (req: Request, res: Response) => {
+router.post("/logout", (_req: Request, res: Response) => {
   clearCookie(res);
   res.json({ message: "Logged out" });
 });

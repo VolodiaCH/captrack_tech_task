@@ -2,7 +2,7 @@ import { OAuthProvider, OAuthProfile } from "./types.js";
 
 export class FakeOAuthProvider implements OAuthProvider {
   constructor(
-    private provider: "GOOGLE" | "GITHUB",
+    _provider: "GOOGLE" | "GITHUB",
     private profile: OAuthProfile,
   ) {}
 
