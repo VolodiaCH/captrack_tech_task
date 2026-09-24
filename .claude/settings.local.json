@@ -51,7 +51,8 @@
       "Bash(curl -s http://localhost:3001/api/auth/me)",
       "Bash(git commit -m 'Fix infinite loop in alert components: memoize Zustand selectors *)",
       "Bash(git commit *)",
-      "Bash(grep -E \"^\\(C:|✖|$\\)\")"
+      "Bash(grep -E \"^\\(C:|✖|$\\)\")",
+      "Bash(Get-Content \"C:\\\\Users\\\\stepa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--dev-practise-task\\\\7e6f9907-6076-42b1-9c5c-3bcbaae89874\\\\tasks\\\\buxdo8m4r.output\" -Wait)"
     ]
   }
 }

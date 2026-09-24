@@ -58,6 +58,25 @@ router.patch("/:id", requireAuth, validateBody(updateCategorySchema), async (req
   }
 });
 
+router.put("/:id", requireAuth, validateBody(updateCategorySchema), async (req: Request, res: Response) => {
+  try {
+    const category = await categoryService.replaceCategory(req.user!.userId, req.params.id, req.body.name);
+    res.json(category);
+  } catch (error: unknown) {
+    const message = getErrorMessage(error);
+    if (message === "Cannot rename the default Uncategorized category") {
+      res.status(400).json({ error: message });
+    } else if (message === "Category not found") {
+      res.status(404).json({ error: "Category not found" });
+    } else if (error instanceof Error && 'code' in error && error.code === "P2002") {
+      res.status(409).json({ error: "Category name already exists" });
+    } else {
+      console.error("Error updating category:", error);
+      res.status(500).json({ error: "Failed to update category" });
+    }
+  }
+});
+
 router.delete("/:id", requireAuth, async (req: Request, res: Response) => {
   try {
     await categoryService.deleteCategory(req.user!.userId, req.params.id);

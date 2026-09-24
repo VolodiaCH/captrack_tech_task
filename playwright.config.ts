@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig({
   testDir: './e2e',
@@ -28,5 +33,5 @@ export default defineConfig({
     timeout: 120 * 1000,
   },
 
-  globalSetup: require.resolve('./e2e/helpers/globalSetup.ts'),
+  globalSetup: resolve(__dirname, './e2e/helpers/globalSetup.ts'),
 });

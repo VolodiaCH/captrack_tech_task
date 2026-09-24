@@ -57,4 +57,26 @@ test.describe('Category CRUD', () => {
     const uncatRow = page.locator('text="Uncategorized"').locator('..');
     await expect(uncatRow.locator('button:has-text("Delete")')).not.toBeTruthy();
   });
+
+  test('PUT endpoint: replace category name', async ({ page }) => {
+    const originalName = `ReplaceMe-${Date.now()}`;
+    const newName = `Replaced-${Date.now()}`;
+
+    // Create a category
+    await page.click('button:has-text("+ New Category")');
+    await page.fill('input[placeholder*="name" i]', originalName);
+    await page.click('button:has-text("Create")');
+    await page.waitForSelector(`text="${originalName}"`);
+
+    // Rename via the edit button (uses PUT under the hood)
+    await page.click(`text="${originalName}" ~ button`);
+    const input = page.locator(`text="${originalName}")`).locator('..').locator('input');
+    await input.clear();
+    await input.fill(newName);
+    await page.click('button:has-text("Save")');
+    await page.waitForSelector(`text="${newName}"`);
+    expect(page.locator(`text="${newName}"`)).toBeTruthy();
+    // Verify old name no longer exists
+    expect(page.locator(`text="${originalName}"`)).not.toBeTruthy();
+  });
 });

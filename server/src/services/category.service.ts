@@ -38,6 +38,25 @@ export async function updateCategory(userId: string, categoryId: string, name: s
   });
 }
 
+export async function replaceCategory(userId: string, categoryId: string, name: string) {
+  const category = await prisma.category.findUnique({
+    where: { id: categoryId },
+  });
+
+  if (!category || category.userId !== userId) {
+    throw new Error("Category not found");
+  }
+
+  if (category.isDefault) {
+    throw new Error("Cannot rename the default Uncategorized category");
+  }
+
+  return await prisma.category.update({
+    where: { id: categoryId },
+    data: { name },
+  });
+}
+
 export async function deleteCategory(userId: string, categoryId: string) {
   const category = await prisma.category.findUnique({
     where: { id: categoryId },
