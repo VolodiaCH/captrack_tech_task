@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAuth } from "../auth/middleware.js";
 import { validateBody, validateQuery } from "../middleware/validate.js";
 import * as transactionService from "../services/transaction.service.js";
+import { getErrorMessage } from "../utils/errors.js";
 
 export const router = Router();
 
@@ -66,8 +67,9 @@ router.post("/", requireAuth, validateBody(transactionService.createTransactionS
     }
 
     res.status(201).json(transaction);
-  } catch (error: any) {
-    if (error.message === "Category not found") {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error);
+    if (message === "Category not found") {
       res.status(404).json({ error: "Category not found" });
     } else {
       console.error("Error creating transaction:", error);
@@ -80,8 +82,9 @@ router.get("/:id", requireAuth, async (req: Request, res: Response) => {
   try {
     const transaction = await transactionService.getTransaction(req.user!.userId, req.params.id);
     res.json(transaction);
-  } catch (error: any) {
-    if (error.message === "Transaction not found") {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error);
+    if (message === "Transaction not found") {
       res.status(404).json({ error: "Transaction not found" });
     } else {
       console.error("Error fetching transaction:", error);
@@ -101,9 +104,10 @@ router.put("/:id", requireAuth, validateBody(transactionService.createTransactio
     }
 
     res.json(transaction);
-  } catch (error: any) {
-    if (error.message === "Transaction not found" || error.message === "Category not found") {
-      res.status(404).json({ error: error.message });
+  } catch (error: unknown) {
+    const message = getErrorMessage(error);
+    if (message === "Transaction not found" || message === "Category not found") {
+      res.status(404).json({ error: message });
     } else {
       console.error("Error updating transaction:", error);
       res.status(500).json({ error: "Failed to update transaction" });
@@ -134,8 +138,9 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response) => {
     }
 
     res.status(204).send();
-  } catch (error: any) {
-    if (error.message === "Transaction not found") {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error);
+    if (message === "Transaction not found") {
       res.status(404).json({ error: "Transaction not found" });
     } else {
       console.error("Error deleting transaction:", error);

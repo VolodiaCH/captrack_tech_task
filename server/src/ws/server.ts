@@ -32,7 +32,7 @@ export function setupWebSocketServer(httpServer: HTTPServer): ConnectionManager 
     }
 
     // Upgrade to WebSocket
-    wss.handleUpgrade(request, socket as any, head, (ws: WebSocket) => {
+    wss.handleUpgrade(request, socket as Duplex, head, (ws: WebSocket) => {
       const authedSocket = ws as AuthedSocket;
       authedSocket.userId = payload.userId;
       authedSocket.isAlive = true;
@@ -53,7 +53,7 @@ export function setupWebSocketServer(httpServer: HTTPServer): ConnectionManager 
         connectionManager.removeConnection(authedSocket.userId, authedSocket);
       });
 
-      authedSocket.on("error", (err) => {
+      authedSocket.on("error", (err: Error) => {
         console.error("WebSocket error:", err);
       });
     });
@@ -61,13 +61,14 @@ export function setupWebSocketServer(httpServer: HTTPServer): ConnectionManager 
 
   // Heartbeat
   const interval = setInterval(() => {
-    wss.clients.forEach((ws: any) => {
-      if (ws.isAlive === false) {
-        ws.terminate();
+    wss.clients.forEach((ws: WebSocket) => {
+      const authedWs = ws as AuthedSocket;
+      if (authedWs.isAlive === false) {
+        authedWs.terminate();
         return;
       }
-      ws.isAlive = false;
-      ws.ping();
+      authedWs.isAlive = false;
+      authedWs.ping();
     });
   }, 30000);
 

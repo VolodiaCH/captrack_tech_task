@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAuth } from "../auth/middleware.js";
 import { validateBody } from "../middleware/validate.js";
 import * as categoryService from "../services/category.service.js";
+import { getErrorMessage } from "../utils/errors.js";
 
 export const router = Router();
 
@@ -28,8 +29,8 @@ router.post("/", requireAuth, validateBody(createCategorySchema), async (req: Re
   try {
     const category = await categoryService.createCategory(req.user!.userId, req.body.name);
     res.status(201).json(category);
-  } catch (error: any) {
-    if (error.code === "P2002") {
+  } catch (error: unknown) {
+    if (error instanceof Error && (error as any).code === "P2002") {
       res.status(409).json({ error: "Category name already exists" });
     } else {
       console.error("Error creating category:", error);
@@ -42,12 +43,13 @@ router.patch("/:id", requireAuth, validateBody(updateCategorySchema), async (req
   try {
     const category = await categoryService.updateCategory(req.user!.userId, req.params.id, req.body.name);
     res.json(category);
-  } catch (error: any) {
-    if (error.message === "Cannot rename the default Uncategorized category") {
-      res.status(400).json({ error: error.message });
-    } else if (error.message === "Category not found") {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error);
+    if (message === "Cannot rename the default Uncategorized category") {
+      res.status(400).json({ error: message });
+    } else if (message === "Category not found") {
       res.status(404).json({ error: "Category not found" });
-    } else if (error.code === "P2002") {
+    } else if (error instanceof Error && (error as any).code === "P2002") {
       res.status(409).json({ error: "Category name already exists" });
     } else {
       console.error("Error updating category:", error);
@@ -60,13 +62,11 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response) => {
   try {
     await categoryService.deleteCategory(req.user!.userId, req.params.id);
     res.status(204).send();
-  } catch (error: any) {
-    if (
-      error.message === "Cannot delete the default Uncategorized category" ||
-      error.message === "Default category not found"
-    ) {
-      res.status(400).json({ error: error.message });
-    } else if (error.message === "Category not found") {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error);
+    if (message === "Cannot delete the default Uncategorized category" || message === "Default category not found") {
+      res.status(400).json({ error: message });
+    } else if (message === "Category not found") {
       res.status(404).json({ error: "Category not found" });
     } else {
       console.error("Error deleting category:", error);
