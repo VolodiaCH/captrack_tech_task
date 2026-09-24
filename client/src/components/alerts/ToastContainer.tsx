@@ -1,21 +1,21 @@
 import { useMemo } from 'react';
-import { useAlertStore } from '../../state/alertStore';
+import { useAlertStore, Alert, AlertStore } from '../../state/alertStore';
 import { useWsConnection } from '../../ws/useWsConnection';
 import { ClientMessage } from '../../ws/types';
 import './ToastContainer.css';
 
-const selectAllAlerts = (state: any) => state.alerts;
+const selectAllAlerts = (state: AlertStore) => state.alerts;
 
 export function ToastContainer() {
   const allAlerts = useAlertStore(selectAllAlerts);
   const { socket, isConnected } = useWsConnection();
 
   const alerts = useMemo(
-    () => allAlerts.filter((a: any) => !a.acknowledged),
+    () => allAlerts.filter((a: Alert) => !a.acknowledged),
     [allAlerts]
   );
 
-  const handleDismiss = (alert: any) => {
+  const handleDismiss = (alert: Alert) => {
     if (socket && isConnected) {
       const message: ClientMessage = {
         type: 'acknowledge_alert',
@@ -25,8 +25,8 @@ export function ToastContainer() {
       socket.send(JSON.stringify(message));
     }
 
-    useAlertStore.setState((state: any) => ({
-      alerts: state.alerts.map((a: any) =>
+    useAlertStore.setState((state: AlertStore) => ({
+      alerts: state.alerts.map((a: Alert) =>
         a.id === alert.id ? { ...a, acknowledged: true } : a
       ),
     }));
@@ -34,7 +34,7 @@ export function ToastContainer() {
 
   return (
     <div className="toast-container">
-      {alerts.map((alert: any) => (
+      {alerts.map((alert: Alert) => (
         <div key={alert.id} className="toast toast-enter">
           <div className="toast-content">
             <span className="toast-emoji">📊</span>

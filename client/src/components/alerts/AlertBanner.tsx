@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { useAlertStore } from '../../state/alertStore';
+import { useAlertStore, Alert, AlertStore } from '../../state/alertStore';
 import { useWsConnection } from '../../ws/useWsConnection';
 import { ClientMessage } from '../../ws/types';
 import './AlertBanner.css';
 
-const selectAllAlerts = (state: any) => state.alerts;
+const selectAllAlerts = (state: AlertStore) => state.alerts;
 
 export function AlertBanner() {
   const allAlerts = useAlertStore(selectAllAlerts);
@@ -13,7 +13,7 @@ export function AlertBanner() {
   const alert = useMemo(
     () => {
       const unacknowledged = allAlerts.filter(
-        (a: any) => !a.acknowledged && a.threshold === 100
+        (a: Alert) => !a.acknowledged && a.threshold === 100
       );
       return unacknowledged.length > 0 ? unacknowledged[0] : null;
     },
@@ -32,8 +32,8 @@ export function AlertBanner() {
       socket.send(JSON.stringify(message));
     }
 
-    useAlertStore.setState((state: any) => ({
-      alerts: state.alerts.map((a: any) =>
+    useAlertStore.setState((state: AlertStore) => ({
+      alerts: state.alerts.map((a: Alert) =>
         a.id === alert.id ? { ...a, acknowledged: true } : a
       ),
     }));

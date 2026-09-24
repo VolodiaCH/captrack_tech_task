@@ -11,7 +11,7 @@ export type Alert = {
   acknowledged: boolean;
 };
 
-interface AlertStore {
+export interface AlertStore {
   alerts: Alert[];
   addAlert: (alert: Omit<Alert, 'id'>) => void;
   acknowledgeAlert: (id: string) => void;
