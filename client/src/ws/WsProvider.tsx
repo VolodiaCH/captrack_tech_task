@@ -12,6 +12,7 @@ export function WsProvider({ children }: WsProviderProps) {
   });
 
   const reconnectTimeouts = React.useRef<NodeJS.Timeout | null>(null);
+  const reconnectAttempts = React.useRef<number>(0);
 
   const connect = useCallback(() => {
     if (context.socket?.readyState === WebSocket.OPEN) {
@@ -27,6 +28,7 @@ export function WsProvider({ children }: WsProviderProps) {
 
       socket.onopen = () => {
         setContext({ socket, isConnected: true });
+        reconnectAttempts.current = 0;
         if (reconnectTimeouts.current) {
           clearTimeout(reconnectTimeouts.current);
           reconnectTimeouts.current = null;
@@ -53,8 +55,11 @@ export function WsProvider({ children }: WsProviderProps) {
       clearTimeout(reconnectTimeouts.current);
     }
 
-    const delays = [1000, 2000, 4000, 8000, 16000, 30000];
-    const delay = delays[Math.min(delays.length - 1, Math.floor(Math.random() * 3))];
+    const baseDelay = 1000;
+    const maxDelay = 30000;
+    const delay = Math.min(baseDelay * Math.pow(2, reconnectAttempts.current), maxDelay);
+
+    reconnectAttempts.current += 1;
 
     reconnectTimeouts.current = setTimeout(() => {
       connect();
@@ -72,7 +77,7 @@ export function WsProvider({ children }: WsProviderProps) {
         context.socket.close();
       }
     };
-  }, []);
+  }, [connect]);
 
   return <WsContext.Provider value={context}>{children}</WsContext.Provider>;
 }
