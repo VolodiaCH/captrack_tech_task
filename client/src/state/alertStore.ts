@@ -19,39 +19,39 @@ interface AlertStore {
   clearAllAcknowledged: () => void;
 }
 
-export const useAlertStore = create<AlertStore>((set: any) => ({
+export const useAlertStore = create<AlertStore>((set) => ({
   alerts: [],
-  addAlert: (alert: any) =>
-    set((state: any) => {
+  addAlert: (alert: Omit<Alert, 'id'>) =>
+    set((state: AlertStore) => {
       const id = `${alert.yearMonth}-${alert.threshold}`;
       const existing = state.alerts.find(
-        (a: any) => a.yearMonth === alert.yearMonth && a.threshold === alert.threshold
+        (a: Alert) => a.yearMonth === alert.yearMonth && a.threshold === alert.threshold
       );
 
       if (existing) {
         return {
-          alerts: state.alerts.map((a: any) =>
+          alerts: state.alerts.map((a: Alert) =>
             a.id === existing.id ? { ...alert, id, acknowledged: false } : a
           ),
         };
       }
 
       return {
-        alerts: [...state.alerts, { ...alert, id }],
+        alerts: [...state.alerts, { ...alert, id, acknowledged: false }],
       };
     }),
   acknowledgeAlert: (id: string) =>
-    set((state: any) => ({
-      alerts: state.alerts.map((a: any) =>
+    set((state: AlertStore) => ({
+      alerts: state.alerts.map((a: Alert) =>
         a.id === id ? { ...a, acknowledged: true } : a
       ),
     })),
   clearAlert: (id: string) =>
-    set((state: any) => ({
-      alerts: state.alerts.filter((a: any) => a.id !== id),
+    set((state: AlertStore) => ({
+      alerts: state.alerts.filter((a: Alert) => a.id !== id),
     })),
   clearAllAcknowledged: () =>
-    set((state: any) => ({
-      alerts: state.alerts.filter((a: any) => !a.acknowledged),
+    set((state: AlertStore) => ({
+      alerts: state.alerts.filter((a: Alert) => !a.acknowledged),
     })),
 }));
