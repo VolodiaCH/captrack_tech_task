@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Category } from '../../types';
 import { TransactionFilters } from '../../api/transactionsApi';
 
@@ -8,9 +9,18 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ categories, onFiltersChange, filters }: FilterBarProps) {
-  const handleSearchChange = (search: string) => {
-    onFiltersChange({ ...filters, search: search || undefined });
-  };
+  const [searchValue, setSearchValue] = useState(filters.search || '');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onFiltersChange({ ...filters, search: searchValue || undefined });
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [searchValue, filters, onFiltersChange]);
+
+  useEffect(() => {
+    setSearchValue(filters.search || '');
+  }, [filters.search]);
 
   const handleCategoryChange = (categoryId: string) => {
     onFiltersChange({ ...filters, categoryId: categoryId || undefined });
@@ -59,8 +69,8 @@ export function FilterBar({ categories, onFiltersChange, filters }: FilterBarPro
           </label>
           <input
             type="text"
-            value={filters.search || ''}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Search transactions..."
             style={{
               width: '100%',

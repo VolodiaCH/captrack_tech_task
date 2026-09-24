@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Category } from '../../types';
 import { CategoryForm } from './CategoryForm';
 
@@ -8,6 +7,9 @@ interface CategoryItemProps {
   onDelete: () => void;
   isUpdating?: boolean;
   isDeleting?: boolean;
+  isEditing?: boolean;
+  onStartEdit?: () => void;
+  onCancelEdit?: () => void;
 }
 
 export function CategoryItem({
@@ -16,9 +18,10 @@ export function CategoryItem({
   onDelete,
   isUpdating,
   isDeleting,
+  isEditing,
+  onStartEdit,
+  onCancelEdit,
 }: CategoryItemProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
   if (isEditing) {
     return (
       <div
@@ -33,7 +36,7 @@ export function CategoryItem({
           initialValue={category.name}
           onSubmit={(name) => {
             onUpdate(name);
-            setIsEditing(false);
+            onCancelEdit?.();
           }}
           isLoading={isUpdating}
         />
@@ -66,7 +69,7 @@ export function CategoryItem({
       <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
         {!category.isDefault && (
           <button
-            onClick={() => setIsEditing(true)}
+            onClick={onStartEdit}
             disabled={isUpdating}
             style={{
               padding: '0.5rem 0.75rem',

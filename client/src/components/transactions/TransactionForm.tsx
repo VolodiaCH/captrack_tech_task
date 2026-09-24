@@ -39,6 +39,7 @@ export function TransactionForm({
       notes: '',
     }
   );
+  const [titleTouched, setTitleTouched] = useState(!!initialData);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
@@ -79,7 +80,10 @@ export function TransactionForm({
         <input
           type="text"
           value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          onChange={(e) => {
+            setTitleTouched(true);
+            setFormData({ ...formData, title: e.target.value });
+          }}
           placeholder="Transaction title"
           style={{
             width: '100%',
@@ -111,7 +115,15 @@ export function TransactionForm({
         </label>
         <select
           value={formData.categoryId}
-          onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+          onChange={(e) => {
+            const categoryId = e.target.value;
+            if (!titleTouched && categoryId) {
+              const selectedCategory = categories.find((cat) => cat.id === categoryId);
+              setFormData({ ...formData, categoryId, title: selectedCategory?.name || '' });
+            } else {
+              setFormData({ ...formData, categoryId });
+            }
+          }}
           style={{
             width: '100%',
             padding: 'var(--spacing-sm) var(--spacing-md)',

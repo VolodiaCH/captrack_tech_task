@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Category } from '../../types';
 import { CategoryItem } from './CategoryItem';
 
@@ -16,6 +17,8 @@ export function CategoryList({
   updatingId,
   deletingId,
 }: CategoryListProps) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+
   if (categories.length === 0) return null;
 
   return (
@@ -34,6 +37,9 @@ export function CategoryList({
           onDelete={() => onDelete(category.id)}
           isUpdating={updatingId === category.id}
           isDeleting={deletingId === category.id}
+          isEditing={editingId === category.id}
+          onStartEdit={() => setEditingId(category.id)}
+          onCancelEdit={() => setEditingId(null)}
         />
       ))}
     </div>

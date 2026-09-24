@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import {
   transactionsApi,
   TransactionFilters,
@@ -10,6 +10,7 @@ export function useTransactions(filters?: TransactionFilters) {
     queryKey: ['transactions', filters || {}],
     queryFn: () => transactionsApi.getTransactions(filters),
     select: (data): Transaction[] => data.transactions,
+    placeholderData: keepPreviousData,
   });
 }
 
