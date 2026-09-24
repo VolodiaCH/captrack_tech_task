@@ -18,9 +18,14 @@ describe("WebSocket Budget Alerts", () => {
     server = http.createServer(app);
     setupWebSocketServer(server);
 
-    port = Math.floor(Math.random() * 10000) + 30000;
+    // Use port 0 to let the OS automatically assign a free port.
+    // This prevents "address already in use" errors when tests run in parallel.
     await new Promise<void>((resolve) => {
-      server.listen(port, () => resolve());
+      server.listen(0, () => {
+        const addr = server.address();
+        port = typeof addr === "object" ? addr.port : 0;
+        resolve();
+      });
     });
   });
 
