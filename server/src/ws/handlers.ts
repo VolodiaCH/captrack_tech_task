@@ -58,7 +58,7 @@ export async function handleMessage(
   }
 }
 
-export async function handleConnect(socket: AuthedSocket, connectionManager: ConnectionManager) {
+export async function handleConnect(socket: AuthedSocket, _connectionManager: ConnectionManager) {
   const yearMonth = getYearMonth();
   socket.subscribedMonth = yearMonth;
 

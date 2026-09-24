@@ -2,9 +2,7 @@ import http from "http";
 import { loadEnv } from "./config/env.js";
 import { createApp } from "./app.js";
 import { setupWebSocketServer } from "./ws/server.js";
-import { getYearMonth } from "./utils/dateRange.js";
 import * as alertService from "./services/alert.service.js";
-import { ConnectionManager } from "./ws/connectionManager.js";
 
 const env = loadEnv();
 

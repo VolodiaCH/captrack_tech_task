@@ -49,7 +49,9 @@
       "Bash(netstat -ano)",
       "Bash(findstr \":3001\")",
       "Bash(curl -s http://localhost:3001/api/auth/me)",
-      "Bash(git commit -m 'Fix infinite loop in alert components: memoize Zustand selectors *)"
+      "Bash(git commit -m 'Fix infinite loop in alert components: memoize Zustand selectors *)",
+      "Bash(git commit *)",
+      "Bash(grep -E \"^\\(C:|✖|$\\)\")"
     ]
   }
 }

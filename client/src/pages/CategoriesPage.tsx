@@ -29,7 +29,7 @@ export default function CategoriesPage() {
       await createCategory.mutateAsync(name);
       showSuccess('Category created successfully');
       setModalOpen(false);
-    } catch (error) {
+    } catch {
       showError('Failed to create category. Please try again.');
     }
   };
@@ -40,7 +40,7 @@ export default function CategoriesPage() {
       await updateCategory.mutateAsync({ id, name });
       showSuccess('Category updated successfully');
       setUpdatingId(null);
-    } catch (error) {
+    } catch {
       showError('Failed to update category. Please try again.');
       setUpdatingId(null);
     }
@@ -53,7 +53,7 @@ export default function CategoriesPage() {
       showSuccess('Category deleted successfully');
       setDeletingId(null);
       setDeleteConfirm(null);
-    } catch (error) {
+    } catch {
       showError('Failed to delete category. Please try again.');
       setDeletingId(null);
     }

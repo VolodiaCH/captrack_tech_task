@@ -62,7 +62,7 @@ export default function TransactionsPage() {
       });
       showSuccess('Transaction created successfully');
       setModalOpen(false);
-    } catch (error) {
+    } catch {
       showError('Failed to create transaction. Please try again.');
     }
   };
@@ -72,7 +72,7 @@ export default function TransactionsPage() {
       await deleteTransaction.mutateAsync(transaction.id);
       showSuccess('Transaction deleted successfully');
       setDeleteConfirm(null);
-    } catch (error) {
+    } catch {
       showError('Failed to delete transaction. Please try again.');
     }
   };
