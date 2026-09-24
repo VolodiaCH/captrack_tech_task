@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { Transaction } from '../types';
+import { Transaction, TransactionsResponse } from '../types';
 
 export interface TransactionFilters {
   search?: string;
@@ -32,7 +32,7 @@ export const transactionsApi = {
     }
     const queryString = params.toString();
     const path = queryString ? `/api/transactions?${queryString}` : '/api/transactions';
-    return apiClient.get<Transaction[]>(path);
+    return apiClient.get<TransactionsResponse>(path);
   },
   createTransaction: (data: {
     categoryId: string;

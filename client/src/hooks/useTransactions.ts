@@ -3,11 +3,13 @@ import {
   transactionsApi,
   TransactionFilters,
 } from '../api/transactionsApi';
+import { Transaction } from '../types';
 
 export function useTransactions(filters?: TransactionFilters) {
   return useQuery({
     queryKey: ['transactions', filters || {}],
     queryFn: () => transactionsApi.getTransactions(filters),
+    select: (data): Transaction[] => data.transactions,
   });
 }
 

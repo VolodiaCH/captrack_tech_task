@@ -33,6 +33,13 @@ export interface Transaction {
   updatedAt: string;
 }
 
+export interface TransactionsResponse {
+  transactions: Transaction[];
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
 export interface Budget {
   hasBudget: boolean;
   budget?: number;

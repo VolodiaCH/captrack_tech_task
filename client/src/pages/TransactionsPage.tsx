@@ -18,10 +18,12 @@ export default function TransactionsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const { toast, showError, showSuccess, clearToast } = useToast();
 
+  const dateRangeParam = searchParams.get('dateRange');
+  const validDateRanges = ['thisMonth', 'lastMonth', 'custom'];
   const filters: TransactionFilters = {
     search: searchParams.get('search') || undefined,
     categoryId: searchParams.get('categoryId') || undefined,
-    dateRange: (searchParams.get('dateRange') as any) || undefined,
+    dateRange: (dateRangeParam && validDateRanges.includes(dateRangeParam) ? dateRangeParam : undefined) as 'thisMonth' | 'lastMonth' | 'custom' | undefined,
     startDate: searchParams.get('startDate') || undefined,
     endDate: searchParams.get('endDate') || undefined,
     minAmount: searchParams.get('minAmount') ? parseFloat(searchParams.get('minAmount')!) : undefined,
@@ -54,7 +56,10 @@ export default function TransactionsPage() {
     notes?: string;
   }) => {
     try {
-      await createTransaction.mutateAsync(data);
+      await createTransaction.mutateAsync({
+        ...data,
+        date: new Date(data.date).toISOString(),
+      });
       showSuccess('Transaction created successfully');
       setModalOpen(false);
     } catch (error) {

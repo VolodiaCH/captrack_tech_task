@@ -12,7 +12,7 @@ export function TransactionsTable({
   onEdit,
   onDelete,
 }: TransactionsTableProps) {
-  if (transactions.length === 0) return null;
+  if (!transactions || transactions.length === 0) return null;
 
   return (
     <div style={{ overflowX: 'auto' }}>
