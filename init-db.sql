@@ -1,5 +1,8 @@
--- Create captrack main database if not exists
-CREATE DATABASE IF NOT EXISTS captrack;
+-- Create captrack main database
+CREATE DATABASE captrack;
 
--- Create captrack_test database if not exists
-CREATE DATABASE IF NOT EXISTS captrack_test;
+-- Create captrack_test database for backend tests
+CREATE DATABASE captrack_test;
+
+-- Create captrack_e2e database for Playwright E2E tests
+CREATE DATABASE captrack_e2e;
