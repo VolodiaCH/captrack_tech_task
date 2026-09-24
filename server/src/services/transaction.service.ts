@@ -1,6 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library.js";
 import prisma from "../prisma/client.js";
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { getYearMonth } from "../utils/dateRange.js";
 
 export const createTransactionSchema = z.object({
@@ -55,13 +56,10 @@ export async function getTransactions(
   const page = filters?.page || 1;
   const skip = (page - 1) * pageSize;
 
-  const where = {
-    userId,
-    AND: [] as any[],
-  };
+  const andConditions: Prisma.TransactionWhereInput[] = [];
 
   if (filters?.search) {
-    where.AND.push({
+    andConditions.push({
       OR: [
         { title: { contains: filters.search, mode: "insensitive" } },
         { notes: { contains: filters.search, mode: "insensitive" } },
@@ -70,22 +68,27 @@ export async function getTransactions(
   }
 
   if (filters?.categoryId) {
-    where.AND.push({ categoryId: filters.categoryId });
+    andConditions.push({ categoryId: filters.categoryId });
   }
 
   if (filters?.startDate || filters?.endDate) {
-    const dateFilter: any = {};
+    const dateFilter: Prisma.DateTimeFilter = {};
     if (filters.startDate) dateFilter.gte = new Date(filters.startDate);
     if (filters.endDate) dateFilter.lte = new Date(filters.endDate);
-    where.AND.push({ date: dateFilter });
+    andConditions.push({ date: dateFilter });
   }
 
   if (filters?.minAmount !== undefined || filters?.maxAmount !== undefined) {
-    const amountFilter: any = {};
-    if (filters.minAmount !== undefined) amountFilter.gte = filters.minAmount;
-    if (filters.maxAmount !== undefined) amountFilter.lte = filters.maxAmount;
-    where.AND.push({ amount: amountFilter });
+    const amountFilter: Prisma.DecimalFilter = {};
+    if (filters.minAmount !== undefined) amountFilter.gte = new Decimal(filters.minAmount);
+    if (filters.maxAmount !== undefined) amountFilter.lte = new Decimal(filters.maxAmount);
+    andConditions.push({ amount: amountFilter });
   }
+
+  const where: Prisma.TransactionWhereInput = {
+    userId,
+    ...(andConditions.length > 0 && { AND: andConditions }),
+  };
 
   const [transactions, count] = await Promise.all([
     prisma.transaction.findMany({

@@ -19,11 +19,19 @@ export default function TransactionsPage() {
   const { toast, showError, showSuccess, clearToast } = useToast();
 
   const dateRangeParam = searchParams.get('dateRange');
-  const validDateRanges = ['thisMonth', 'lastMonth', 'custom'];
+  const validDateRanges: Array<'thisMonth' | 'lastMonth' | 'custom'> = [
+    'thisMonth',
+    'lastMonth',
+    'custom',
+  ];
+  const isValidDateRange = (val: string | null): val is 'thisMonth' | 'lastMonth' | 'custom' => {
+    return val !== null && validDateRanges.includes(val as 'thisMonth' | 'lastMonth' | 'custom');
+  };
+
   const filters: TransactionFilters = {
     search: searchParams.get('search') || undefined,
     categoryId: searchParams.get('categoryId') || undefined,
-    dateRange: (dateRangeParam && validDateRanges.includes(dateRangeParam) ? dateRangeParam : undefined) as 'thisMonth' | 'lastMonth' | 'custom' | undefined,
+    dateRange: isValidDateRange(dateRangeParam) ? dateRangeParam : undefined,
     startDate: searchParams.get('startDate') || undefined,
     endDate: searchParams.get('endDate') || undefined,
     minAmount: searchParams.get('minAmount') ? parseFloat(searchParams.get('minAmount')!) : undefined,
