@@ -204,9 +204,34 @@ Should see:
 PASS  6 passed (in X.XXs)
 ```
 
-### Frontend Tests
+### Running E2E Tests
 
-Currently manual in-browser testing. Phase 5 will add E2E tests.
+```bash
+npm run test:e2e
+```
+
+This runs the Playwright E2E test suite:
+- Auth flow tests (login, protected routes, logout)
+- Category CRUD tests
+- Transaction CRUD and filtering tests
+- Budget alert tests
+- Cross-user isolation tests
+
+**Prerequisites:**
+- Database must be running: `npm run db:up`
+- Make sure DATABASE_URL_E2E is set in `.env` (defaults to `postgresql://captrack:captrack@localhost:5433/captrack_e2e`)
+- Dev server is started automatically by Playwright (`npm run dev`)
+
+The test suite will:
+1. Run migrations on the `captrack_e2e` database
+2. Truncate all tables to clean state
+3. Run all E2E tests in sequence
+4. Generate an HTML report in `playwright-report/`
+
+To open the report after tests finish:
+```bash
+npx playwright show-report
+```
 
 ---
 
