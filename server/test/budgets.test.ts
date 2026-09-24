@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createApp } from "../src/app.js";
 import { loginAs } from "./helpers/auth.js";
-import { createTransaction, createCategory, createBudget } from "./helpers/factory.js";
+import { createTransaction, createCategory } from "./helpers/factory.js";
 import { getYearMonth } from "../src/utils/dateRange.js";
 
 describe("Budgets", () => {

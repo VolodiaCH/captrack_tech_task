@@ -27,13 +27,14 @@ export function useWsAlerts(yearMonth: string) {
         const message: ServerMessage = JSON.parse(event.data);
 
         if (message.type === 'budget_status') {
+          const existing = queryClient.getQueryData(['budget', message.yearMonth]) as { currency?: string } | undefined;
           queryClient.setQueryData(['budget', message.yearMonth], {
             hasBudget: message.hasBudget,
             budget: message.budget,
             spent: message.spent,
             remaining: message.remaining,
             usagePct: message.usagePct,
-            currency: queryClient.getQueryData<any>(['budget', message.yearMonth])?.currency || 'USD',
+            currency: existing?.currency || 'USD',
           });
         } else if (message.type === 'threshold_alert') {
           addAlert({

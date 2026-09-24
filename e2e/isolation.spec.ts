@@ -1,4 +1,4 @@
-import { test, expect, chromium } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { loginAsTestUser } from './helpers/auth';
 
 test.describe('Cross-User Isolation', () => {

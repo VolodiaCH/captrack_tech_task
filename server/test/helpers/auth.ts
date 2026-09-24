@@ -3,7 +3,6 @@ import { Express } from "express";
 import { signToken } from "../../src/auth/jwt.js";
 import { FakeOAuthProvider } from "../../src/auth/providers/fake.js";
 import { OAuthProfile } from "../../src/auth/providers/types.js";
-import prisma from "../../src/prisma/client.js";
 import { findOrCreateUser } from "../../src/auth/auth.service.js";
 
 export async function loginAs(

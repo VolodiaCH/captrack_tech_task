@@ -22,7 +22,7 @@ export async function connectWebSocket(url: string, cookie: string): Promise<Web
   });
 }
 
-export async function waitForMessage<T = any>(ws: WebSocket, timeout = 3000): Promise<T> {
+export async function waitForMessage<T = unknown>(ws: WebSocket, timeout = 3000): Promise<T> {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       reject(new Error("Message timeout"));
@@ -39,6 +39,6 @@ export async function waitForMessage<T = any>(ws: WebSocket, timeout = 3000): Pr
   });
 }
 
-export function send(ws: WebSocket, message: any): void {
+export function send(ws: WebSocket, message: unknown): void {
   ws.send(JSON.stringify(message));
 }

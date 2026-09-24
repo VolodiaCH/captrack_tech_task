@@ -9,7 +9,7 @@ import { getYearMonth } from "../src/utils/dateRange.js";
 import prisma from "../src/prisma/client.js";
 
 describe("WebSocket Budget Alerts", () => {
-  let app: any;
+  let app: unknown;
   let server: http.Server;
   let port: number;
 
@@ -74,7 +74,7 @@ describe("WebSocket Budget Alerts", () => {
       });
 
     // Wait for alerts
-    const statusMsg = await waitForMessage(ws);
+    await waitForMessage(ws); // budget_status
     const alertMsg = await waitForMessage(ws);
 
     expect(alertMsg.type).toBe("threshold_alert");
@@ -158,14 +158,11 @@ describe("WebSocket Budget Alerts", () => {
       });
 
     const alert1 = await waitForMessage(ws); // budget_status or alert
-    let firstAlert: any = null;
-    if (alert1.type === "threshold_alert") {
-      firstAlert = alert1;
-    } else {
-      firstAlert = await waitForMessage(ws);
-    }
-    expect(firstAlert.type).toBe("threshold_alert");
-    expect(firstAlert.threshold).toBe(80);
+    const firstAlert = alert1 && typeof alert1 === 'object' && 'type' in alert1 && alert1.type === "threshold_alert"
+      ? alert1
+      : await waitForMessage(ws);
+    expect(firstAlert).toHaveProperty('type', 'threshold_alert');
+    expect(firstAlert).toHaveProperty('threshold', 80);
 
     // Drop back to 50% by deleting a transaction
     const txn = await prisma.transaction.findFirst({ where: { userId: user.id } });
@@ -298,7 +295,8 @@ describe("WebSocket Budget Alerts", () => {
       await connectWebSocket(`ws://localhost:${port}/ws`, "");
       expect.fail("Should have rejected connection");
     } catch (err) {
-      expect((err as any).message).toContain("401");
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      expect(errorMessage).toContain("401");
     }
   });
 });

@@ -18,7 +18,7 @@ describe("Cross-user Authorization", () => {
       .expect(200);
 
     expect(res.body).toHaveLength(1); // Only Uncategorized for user2
-    expect(res.body.some((c: any) => c.id === cat1.id)).toBe(false);
+    expect(res.body.some((c: { id: string }) => c.id === cat1.id)).toBe(false);
   });
 
   it("should not allow user to see another user's transactions", async () => {
@@ -34,7 +34,7 @@ describe("Cross-user Authorization", () => {
       .expect(200);
 
     expect(res.body.transactions).toHaveLength(0);
-    expect(res.body.transactions.some((t: any) => t.id === txn1.id)).toBe(false);
+    expect(res.body.transactions.some((t: { id: string }) => t.id === txn1.id)).toBe(false);
   });
 
   it("should return 404 when accessing another user's transaction", async () => {

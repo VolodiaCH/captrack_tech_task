@@ -43,9 +43,8 @@ export async function recomputeThresholds(userId: string, yearMonth: string): Pr
           firedAt: alert.firedAt.toISOString(),
           replay: false,
         });
-      } catch (err: any) {
-        // Unique constraint violation means it already fired
-        if (err.code !== "P2002") throw err;
+      } catch (err: unknown) {
+        if (err instanceof Error && 'code' in err && err.code !== "P2002") throw err;
       }
     }
   }

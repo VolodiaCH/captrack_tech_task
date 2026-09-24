@@ -18,8 +18,8 @@ describe("Categories", () => {
       .expect(200);
 
     expect(res.body).toHaveLength(3); // Uncategorized + 2 custom
-    expect(res.body.some((c: any) => c.name === "Uncategorized")).toBe(true);
-    expect(res.body.some((c: any) => c.name === "Groceries")).toBe(true);
+    expect(res.body.some((c: { name: string }) => c.name === "Uncategorized")).toBe(true);
+    expect(res.body.some((c: { name: string }) => c.name === "Groceries")).toBe(true);
   });
 
   it("should create a new category", async () => {

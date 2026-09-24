@@ -30,7 +30,7 @@ router.post("/", requireAuth, validateBody(createCategorySchema), async (req: Re
     const category = await categoryService.createCategory(req.user!.userId, req.body.name);
     res.status(201).json(category);
   } catch (error: unknown) {
-    if (error instanceof Error && (error as any).code === "P2002") {
+    if (error instanceof Error && 'code' in error && error.code === "P2002") {
       res.status(409).json({ error: "Category name already exists" });
     } else {
       console.error("Error creating category:", error);
@@ -49,7 +49,7 @@ router.patch("/:id", requireAuth, validateBody(updateCategorySchema), async (req
       res.status(400).json({ error: message });
     } else if (message === "Category not found") {
       res.status(404).json({ error: "Category not found" });
-    } else if (error instanceof Error && (error as any).code === "P2002") {
+    } else if (error instanceof Error && 'code' in error && error.code === "P2002") {
       res.status(409).json({ error: "Category name already exists" });
     } else {
       console.error("Error updating category:", error);

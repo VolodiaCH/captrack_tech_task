@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import { Client } from 'pg';
 
 async function globalSetup() {
   // Run migrations on captrack_e2e database
@@ -22,7 +23,6 @@ async function globalSetup() {
 
   // Truncate all tables (reset to clean state)
   console.log('Resetting database...');
-  const { Client } = require('pg');
   const dbUrl = new URL(process.env.DATABASE_URL_E2E || '');
 
   const client = new Client({
